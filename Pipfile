@@ -8,6 +8,7 @@ gtts = "*"
 pdfplumber = "*"
 art = "*"
 aiogram = "*"
+docx2pdf = "*"
 
 [dev-packages]
 autopep8 = "*"

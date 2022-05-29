@@ -9,6 +9,7 @@ from aiogram.dispatcher.filters import Text
 import urllib
 
 from convert import ConvertPdfToMp3, available_languages
+import docx2pdf as d2p
 
 from pathlib import Path
 
@@ -65,12 +66,16 @@ async def convert_get_pdf(message: types.Message, state: FSMContext):
         file_info = await bot.get_file(document_id)
         file_path = file_info.file_path
         
-        if file_path.split('.')[-1] != 'pdf':
-            await message.answer(f"PDF-file needed! (Not {file_path.split('.')[-1].upper()})")
+        if file_path.split('.')[-1] not in ('pdf', 'docx'):
+            await message.answer(f"PDF- or DOCX-file needed! (Not {file_path.split('.')[-1].upper()})")
             return
         
         urllib.request.urlretrieve(f'https://api.telegram.org/file/bot{API_TOKEN}/{file_path}', local_file_path)
     await state.update_data(pdf_path=local_file_path)
+    
+    if local_file_path.endswith('.docx'):
+        d2p.convert(local_file_path, str(Path(local_file_path).with_suffix('.pdf')))
+        # os.remove(local_file_path)
     
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     for language in available_languages:
