@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 gtts = "*"
 pdfplumber = "*"
-art = "*"
 aiogram = "*"
 docx2pdf = "*"
 textract = "*"
