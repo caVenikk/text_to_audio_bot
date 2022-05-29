@@ -9,6 +9,7 @@ pdfplumber = "*"
 art = "*"
 aiogram = "*"
 docx2pdf = "*"
+textract = "*"
 
 [dev-packages]
 autopep8 = "*"
