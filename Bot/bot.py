@@ -105,7 +105,7 @@ async def convert_give_mp3(message: types.Message, state: FSMContext):
     
         await msg.delete()
     
-    await bot.send_audio(message.from_user.id, types.input_file.InputFile(mp3_path, mp3_path.split('/')[-1]))
+    await bot.send_voice(message.from_user.id, types.input_file.InputFile(mp3_path, mp3_path.split('/')[-1]))
     
     # For memory optimization
     # os.remove(mp3_path)

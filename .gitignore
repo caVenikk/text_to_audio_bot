@@ -1,6 +1,11 @@
 # Config file
 config.ini
 
+# Local files
+PDFs/
+MP3s/
+PDF/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
