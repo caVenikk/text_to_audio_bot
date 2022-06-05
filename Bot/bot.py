@@ -1,5 +1,5 @@
 import configparser
-import logging
+import loguru
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types.message import ContentType
@@ -29,8 +29,6 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 API_TOKEN = config['Settings']['API_TOKEN']
-
-logging.basicConfig(level=logging.INFO)
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -131,7 +129,7 @@ async def convert_send_voice(message: types.Message, state: FSMContext):
     await bot.send_voice(message.from_user.id, types.input_file.InputFile(mp3_path, mp3_path.split('/')[-1]))
 
     # For memory optimization
-    os.remove(mp3_path)
+    # os.remove(mp3_path)
     if 'pdf_path' in user_data:
         os.remove(user_data['pdf_path'])
 
@@ -145,4 +143,7 @@ async def echo(message: types.Message):
 
 
 if __name__ == '__main__':
+    loguru.logger.info(f"Number of message handlers: {len(dp.message_handlers.handlers)}.")
+    loguru.logger.info(f"Number of callback query handlers: {len(dp.callback_query_handlers.handlers)}.")
+    loguru.logger.warning("The application is running in polling mode.")
     executor.start_polling(dp)
