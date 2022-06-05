@@ -129,7 +129,7 @@ async def convert_send_voice(message: types.Message, state: FSMContext):
     await bot.send_voice(message.from_user.id, types.input_file.InputFile(mp3_path, mp3_path.split('/')[-1]))
 
     # For memory optimization
-    # os.remove(mp3_path)
+    os.remove(mp3_path)
     if 'pdf_path' in user_data:
         os.remove(user_data['pdf_path'])
 
