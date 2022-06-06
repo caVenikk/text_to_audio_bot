@@ -99,34 +99,37 @@ async def convert_get_file_or_text(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=ConvertTextToAudio.STATE_LANGUAGE_WAITING)
 async def convert_send_voice(message: types.Message, state: FSMContext):
-    if message.text.lower() not in available_languages:
-        await message.answer('Please select <i>language</i> using <b>keyboard</b>.',
-                             parse_mode='HTML')
-        return
-    user_data = await state.get_data()
+    try:
+        if message.text.lower() not in available_languages:
+            await message.answer('Please select <i>language</i> using <b>keyboard</b>.',
+                                parse_mode='HTML')
+            return
+        user_data = await state.get_data()
 
-    text = user_data['text']
-    language = message.text.lower()
+        text = user_data['text']
+        language = message.text.lower()
 
-    mp3_path = f"./Bot/MP3/{converter.unique_filename('MP3', 'voice')}.mp3"
+        mp3_path = f"./Bot/MP3/{converter.unique_filename('MP3', 'voice')}.mp3"
 
-    if not Path(mp3_path).is_file():
-        msg = await message.answer('<i>Processing...</i>',
-                                   reply_markup=types.ReplyKeyboardRemove(),
-                                   parse_mode='HTML')
-        mp3_path = converter.text_to_mp3(text=text, language=language,)
+        if not Path(mp3_path).is_file():
+            msg = await message.answer('<i>Processing...</i>',
+                                    reply_markup=types.ReplyKeyboardRemove(),
+                                    parse_mode='HTML')
+            mp3_path = converter.text_to_mp3(text=text, language=language,)
 
-        if mp3_path:
-            await message.answer('<b>Done!</b> Here\'s your <i>audio</i>:',
-                                 parse_mode='HTML')
-        else:
-            await message.answer('<b>Something went wrong!</b> Try <i>again</i>.',
-                                 parse_mode='HTML')
-            await state.finish()
+            if mp3_path:
+                await message.answer('<b>Done!</b> Here\'s your <i>audio</i>:',
+                                    parse_mode='HTML')
+            else:
+                await message.answer('<b>Something went wrong!</b> Try <i>again</i>.',
+                                    parse_mode='HTML')
+                await state.finish()
 
-        await msg.delete()
+            await msg.delete()
 
-    await bot.send_voice(message.from_user.id, types.input_file.InputFile(mp3_path, mp3_path.split('/')[-1]))
+        await bot.send_voice(message.from_user.id, types.input_file.InputFile(mp3_path, mp3_path.split('/')[-1]))
+    except Exception as e:
+        loguru.logger.error(e)
 
     # For memory optimization
     os.remove(mp3_path)
