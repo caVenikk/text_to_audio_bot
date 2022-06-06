@@ -131,10 +131,13 @@ async def convert_send_voice(message: types.Message, state: FSMContext):
     except Exception as e:
         loguru.logger.error(e)
 
-    # For memory optimization
-    os.remove(mp3_path)
-    if 'pdf_path' in user_data:
-        os.remove(user_data['pdf_path'])
+    try:
+        # For memory optimization
+        os.remove(mp3_path)
+        if 'pdf_path' in user_data:
+            os.remove(user_data['pdf_path'])
+    except Exception as e:
+        loguru.logger.error(e)
 
     await state.finish()
 
